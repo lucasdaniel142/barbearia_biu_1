@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendamentos - Barbearia Biu 1</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #222;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #000;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .agendamento {
+            background-color: #333;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .agendamento strong {
+            color: #00c853;
+        }
+        a {
+            color: #00c853;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agendamentos</h1>
+        {% if agendamentos %}
+            {% for a in agendamentos %}
+                <div class="agendamento">
+                    <p><strong>Nome:</strong> {{ a.nome }}</p>
+                    <p><strong>Telefone:</strong> {{ a.telefone }}</p>
+                    <p><strong>Data:</strong> {{ a.data }}</p>
+                    <p><strong>Hora:</strong> {{ a.hora }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Nenhum agendamento ainda.</p>
+        {% endif %}
+        <p><a href="{{ url_for('index') }}">Voltar</a></p>
+    </div>
+</body>
+</html>

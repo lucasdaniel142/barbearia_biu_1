@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbearia Biu 1 - Agendamento</title>
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                        url("{{ url_for('static', filename='logo_ba.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(20, 20, 20, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        img.logo {
+            width: 150px;
+            border-radius: 100%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        img.logo:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        input, select {
+            padding: 15px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 16px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+        }
+        select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        select option {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px;
+        }
+        .date-time-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .date-picker, .time-picker {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .date-picker label, .time-picker label {
+            display: block;
+            margin-bottom: 12px;
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        input[type="date"] {
+            color: #fff;
+            font-family: inherit;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .time-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #00c853;
+            font-weight: bold;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 20px 0;
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            font-size: 18px;
+            font-weight: bold;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        button:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+        a:hover {
+            border-bottom-color: #fff;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            input, select, button {
+                padding: 12px;
+                font-size: 16px;
+            }
+            img.logo {
+                width: 120px;
+            }
+            .date-picker, .time-picker {
+                padding: 15px;
+            }
+        }
+        .horario-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+        }
+        .error-message {
+            color: #ff5252;
+            display: none;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        /* Estilos para os links sociais */
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .social-link img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+        .social-link:hover img {
+            transform: scale(1.1);
+        }
+        .social-link span {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        /* WhatsApp específico */
+        .social-link.whatsapp:hover {
+            background: #25D366;
+        }
+        /* Instagram específico */
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo_ba.jpg') }}" alt="Logo Barbearia" class="logo">
+        </div>
+        <h1>Agende seu horário</h1>
+        <div class="horario-info">
+            Horário de funcionamento:<br>
+            Terça a Domingo: 09:00 às 19:00<br>
+            Segunda: Fechado
+        </div>
+        <form action="{{ url_for('agendar') }}" method="POST" id="agendamentoForm">
+            <div class="form-group">
+                <input type="text" name="nome" placeholder="Seu nome completo" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="telefone" placeholder="WhatsApp (com DDD)" required>
+            </div>
+            <div class="date-time-container">
+                <div class="date-picker">
+                    <label for="data">Data do agendamento</label>
+                    <input type="date" name="data" id="data" required>
+                    <div class="error-message" id="dataError">Escolha uma data válida (Terça a Domingo)</div>
+                </div>
+                <div class="time-picker">
+                    <label for="hora">Horário do agendamento</label>
+                    <select name="hora" id="hora" required>
+                        <option value="">Selecione um horário</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Agendar Agora</button>
+        </form>
+        <p><a href="{{ url_for('listar_agendamentos') }}">Ver agendamentos</a></p>
+
+        <!-- Links Sociais -->
+        <div class="social-links">
+            <a href="https://wa.me/5582988123197" target="_blank" class="social-link whatsapp">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://www.instagram.com/barbearia_biu_bentes" target="_blank" class="social-link instagram">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+                <span>Instagram</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('agendamentoForm').addEventListener('submit', function(e) {
+            const data = new Date(document.getElementById('data').value);
+            const diaSemana = data.getDay();
+            
+            let hasError = false;
+            
+            if (diaSemana === 1) {
+                document.getElementById('dataError').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('dataError').style.display = 'none';
+            }
+            
+            if (hasError) {
+                e.preventDefault();
+            }
+        });
+
+        const hoje = new Date();
+        const dataMinima = hoje.toISOString().split('T')[0];
+        document.getElementById('data').setAttribute('min', dataMinima);
+
+        document.getElementById('data').addEventListener('change', function() {
+            const data = new Date(this.value);
+            const diaSemana = data.getDay();
+            
+            if (diaSemana === 1) {
+                document.getElementById('dataError').style.display = 'block';
+            } else {
+                document.getElementById('dataError').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
