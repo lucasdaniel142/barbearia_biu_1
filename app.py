@@ -56,7 +56,7 @@ def formatar_data(data_str):
 
 def enviar_whatsapp(nome, telefone, data, hora):
     # Número do WhatsApp da barbearia
-    numero_barbearia = "82987187113"
+    numero_barbearia = "82988123197"
     
     # Remove caracteres não numéricos dos telefones
     telefone_cliente = ''.join(filter(str.isdigit, telefone))
